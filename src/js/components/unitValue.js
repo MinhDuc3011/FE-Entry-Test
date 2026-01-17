@@ -51,6 +51,10 @@ export function initUnitValue() {
       const wrapper = btn.closest('.stepper-btn-wrapper');
       const tooltip = wrapper.querySelector('.tooltip');
       if (tooltip) {
+        // Only show increase tooltip if unit is percent
+        if (btn.dataset.action === 'increase' && currentUnit !== 'percent') {
+          return;
+        }
         const rect = btn.getBoundingClientRect();
         tooltip.style.left = rect.left + rect.width / 2 + 'px';
         tooltip.style.top = rect.top - 38 + 'px';
@@ -104,6 +108,7 @@ function updateInputAndButtons() {
   const valueEl = document.getElementById('value');
   const decreaseBtn = document.querySelector('[data-action="decrease"]');
   const increaseBtn = document.querySelector('[data-action="increase"]');
+  const increaseTooltip = increaseBtn.closest('.stepper-btn-wrapper').querySelector('.tooltip');
 
   // Update input value
   valueEl.value = value.toFixed(1);
@@ -112,10 +117,12 @@ function updateInputAndButtons() {
   if (currentUnit === 'percent') {
     decreaseBtn.disabled = value === 0;
     increaseBtn.disabled = value === 100;
+    if (increaseTooltip) increaseTooltip.style.display = '';
   } else {
     // For px, only disable decrease at 0
     decreaseBtn.disabled = value === 0;
     increaseBtn.disabled = false;
+    if (increaseTooltip) increaseTooltip.style.display = 'none';
   }
 }
 
