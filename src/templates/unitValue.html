@@ -1,8 +1,6 @@
-<div class="bg-neutral-800 p-6 rounded-xl w-[420px] text-white space-y-6">
-  <h3 class="text-sm text-neutral-400">Unit value</h3>
-
+<div class="bg-neutral-800 p-6 rounded-xl w-[280px] text-white space-y-6">
   <div class="flex justify-between items-center">
-    <span class="text-sm">Unit</span>
+    <span class="text-sm text-[#AAAAAA]">Unit</span>
     <div class="flex flex-row items-start p-0.5 gap-0.5 w-[140px] h-9 bg-neutral-900 rounded-lg">
       <button data-unit="percent" class="unit-btn active flex flex-row justify-center items-center w-[67px] h-8 rounded-md border-none cursor-pointer font-medium text-xs leading-5 text-center transition-all duration-200">%</button>
       <button data-unit="px" class="unit-btn flex flex-row justify-center items-center w-[67px] h-8 rounded-md border-none cursor-pointer font-medium text-xs leading-5 text-center transition-all duration-200">px</button>
@@ -10,10 +8,10 @@
   </div>
 
   <div class="flex justify-between items-center">
-    <span class="text-sm">Value</span>
+    <span class="text-sm text-[#AAAAAA]">Value</span>
     <div class="flex flex-row items-center w-[140px] h-9 bg-neutral-900 rounded-lg border border-transparent focus-within:border-[#3C67FF] focus-within:shadow-[0_0_0_1px_#3C67FF] transition-all duration-200 overflow-hidden relative">
       <div class="stepper-btn-wrapper static flex flex-col items-center h-9 flex-[0_0_36px]">
-        <button data-action="decrease" class="stepper-btn flex flex-row justify-center items-center w-9 h-9 bg-neutral-900 border-none text-white cursor-pointer text-base transition-colors duration-200 relative z-[1] hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed">−</button>
+        <button data-action="decrease" class="stepper-btn flex flex-row justify-center items-center w-9 h-9 bg-neutral-900 border-none text-white cursor-pointer text-[20px] transition-colors duration-200 relative z-[1] hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed">−</button>
         <div class="tooltip hidden flex-col justify-end items-center fixed w-auto min-w-[176px] bg-transparent z-[1000] pointer-events-none">
           <div class="tooltip-content flex flex-row items-center justify-center px-2 py-1 min-w-[176px] h-[26px] bg-neutral-900 rounded-lg text-white font-normal text-xs leading-5 text-center whitespace-nowrap">Value must greater than 0</div>
           <div class="tooltip-arrow w-2 h-1 bg-neutral-900 absolute -bottom-1 left-1/2 -translate-x-1/2" style="clip-path: polygon(0 0, 100% 0, 50% 100%)"></div>
@@ -21,7 +19,7 @@
       </div>
       <input id="value" type="text" value="1.0" class="flex flex-row justify-center items-center px-2 w-[68px] h-9 bg-neutral-900 border-none outline-none text-white font-normal text-xs leading-5 text-center transition-colors duration-200 hover:bg-neutral-700" />
       <div class="stepper-btn-wrapper static flex flex-col items-center h-9 flex-[0_0_36px]">
-        <button data-action="increase" class="stepper-btn flex flex-row justify-center items-center w-9 h-9 bg-neutral-900 border-none text-white cursor-pointer text-base transition-colors duration-200 relative z-[1] hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed">+</button>
+        <button data-action="increase" class="stepper-btn flex flex-row justify-center items-center w-9 h-9 bg-neutral-900 border-none text-white cursor-pointer text-[20px] transition-colors duration-200 relative z-[1] hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed">+</button>
         <div class="tooltip hidden flex-col justify-end items-center fixed w-auto min-w-[176px] bg-transparent z-[1000] pointer-events-none">
           <div class="tooltip-content flex flex-row items-center justify-center px-2 py-1 min-w-[176px] h-[26px] bg-neutral-900 rounded-lg text-white font-normal text-xs leading-5 text-center whitespace-nowrap">Value must smaller than 100</div>
           <div class="tooltip-arrow w-2 h-1 bg-neutral-900 absolute -bottom-1 left-1/2 -translate-x-1/2" style="clip-path: polygon(0 0, 100% 0, 50% 100%)"></div>
