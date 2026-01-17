@@ -1,0 +1,14 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "tailwindcss -i ./src/css/main.css -o ./dist/main.css --watch",
+    "build": "tailwindcss -i ./src/css/main.css -o ./dist/main.css --minify",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.0",
+    "autoprefixer": "^10.4.0",
+    "vitest": "^1.0.0"
+  }
+}

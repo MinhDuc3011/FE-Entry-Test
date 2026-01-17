@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Unit button active state */
+.unit-btn {
+  background: transparent;
+  color: #AAAAAA;
+}
+
+.unit-btn.active {
+  background: #424242;
+  color: #F9F9F9;
+}
+
+/* Tooltip hover state */
+.stepper-btn-wrapper:hover .tooltip {
+  display: flex;
+}
