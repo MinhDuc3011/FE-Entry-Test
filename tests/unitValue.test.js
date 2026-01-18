@@ -6,7 +6,6 @@ import {
 } from "../src/js/components/unitValue";
 
 let valueInput;
-let unitButtons;
 let decreaseBtn;
 let increaseBtn;
 
