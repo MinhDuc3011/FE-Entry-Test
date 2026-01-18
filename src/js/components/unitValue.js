@@ -1,25 +1,29 @@
-import { clamp } from '../utils/clamp.js';
+let value = 100.0;
+let currentUnit = "percent"; // 'percent' | 'px'
+let lastValidValue = 100;
 
-let value = 1.0;
-let currentUnit = 'percent'; // 'percent' or 'px'
-
+/**
+ * Initialize unit value logic:
+ * - switch unit (% / px)
+ * - handle input typing
+ * - validate on blur
+ * - handle increase / decrease buttons
+ */
 export function initUnitValue() {
-  const valueEl = document.getElementById('value');
-  const unitButtons = document.querySelectorAll('.unit-btn');
-  const actionButtons = document.querySelectorAll('[data-action]');
+  const valueEl = document.getElementById("value");
+  const unitButtons = document.querySelectorAll(".unit-btn");
+  const actionButtons = document.querySelectorAll("[data-action]");
 
-  // Unit switching
-  unitButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      unitButtons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      
-      const newUnit = btn.dataset.unit === 'percent' ? 'percent' : 'px';
+  unitButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      unitButtons.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      const newUnit = btn.dataset.unit === "percent" ? "percent" : "px";
       if (newUnit !== currentUnit) {
         currentUnit = newUnit;
-        
-        // If switching to % and value > 100, set to 100
-        if (currentUnit === 'percent' && value > 100) {
+
+        if (currentUnit === "percent" && value > 100) {
           value = 100;
         }
         updateInputAndButtons();
@@ -27,103 +31,120 @@ export function initUnitValue() {
     });
   });
 
-  // Input event - allow comma to dot conversion
-  valueEl.addEventListener('input', () => {
-    valueEl.value = valueEl.value.replace(',', '.');
+  valueEl.addEventListener("input", () => {
+    valueEl.value = valueEl.value.replace(",", ".");
   });
 
-  // Blur event - validate and clean up input
-  valueEl.addEventListener('blur', () => {
+  valueEl.addEventListener("blur", () => {
     cleanupAndValidateInput();
   });
 
-  // Action buttons (increase/decrease)
-  actionButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
+  actionButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
       const currentValue = parseFloat(valueEl.value) || 0;
-      const newValue = currentValue + (btn.dataset.action === 'increase' ? 0.1 : -0.1);
-      value = clampValue(newValue);
+      const delta = btn.dataset.action === "increase" ? 0.1 : -0.1;
+      value = clampValue(currentValue + delta);
       updateInputAndButtons();
     });
-    
-    // Position tooltip on hover
-    btn.addEventListener('mouseenter', (e) => {
-      const wrapper = btn.closest('.stepper-btn-wrapper');
-      const tooltip = wrapper.querySelector('.tooltip');
-      if (tooltip) {
-        // Only show increase tooltip if unit is percent
-        if (btn.dataset.action === 'increase' && currentUnit !== 'percent') {
-          return;
-        }
-        const rect = btn.getBoundingClientRect();
-        tooltip.style.left = rect.left + rect.width / 2 + 'px';
-        tooltip.style.top = rect.top - 38 + 'px';
-        tooltip.style.transform = 'translateX(-50%)';
-      }
+
+    btn.addEventListener("mouseenter", () => {
+      if (btn.dataset.action === "increase" && currentUnit !== "percent")
+        return;
+
+      const wrapper = btn.closest(".stepper-btn-wrapper");
+      const tooltip = wrapper.querySelector(".tooltip");
+      if (!tooltip) return;
+
+      const rect = btn.getBoundingClientRect();
+      tooltip.style.left = rect.left + rect.width / 2 + "px";
+      tooltip.style.top = rect.top - 38 + "px";
+      tooltip.style.transform = "translateX(-50%)";
     });
   });
 
-  // Initialize button states
   updateInputAndButtons();
 }
 
+/**
+ * Clean and validate input on blur:
+ * - extract the first valid number
+ * - clamp value based on unit
+ * - store last valid percent value
+ */
 function cleanupAndValidateInput() {
-  const valueEl = document.getElementById('value');
+  const valueEl = document.getElementById("value");
   let input = valueEl.value.trim();
 
   if (!input) {
-    valueEl.value = '0';
     value = 0;
     updateInputAndButtons();
     return;
   }
 
-  // Replace comma with dot
-  input = input.replace(',', '.');
+  input = input.replace(",", ".");
 
-  // Extract the first valid number (handles cases like "a123", "123a", "12a3", "12.4.5")
-  const numberMatch = input.match(/\d+(\.\d+)?/);
-  let cleanValue = 0;
+  const match = input.match(/-?\d+(\.\d+)?/);
+  const cleanValue = match ? parseFloat(match[0]) : 0;
 
-  if (numberMatch) {
-    cleanValue = parseFloat(numberMatch[0]);
+  const newValue = clampValue(cleanValue);
+
+  if (currentUnit === "percent" && newValue >= 0 && newValue <= 100) {
+    lastValidValue = newValue;
   }
 
-  // Apply constraints
-  value = clampValue(cleanValue);
+  value = newValue;
   updateInputAndButtons();
 }
 
+/**
+ * Clamp value:
+ * - minimum is always 0
+ * - maximum is 100 for percent unit
+ */
 function clampValue(val) {
-  // Minimum is always 0
-  if (val < 0) val = 0;
-  
-  // Maximum depends on unit
-  if (currentUnit === 'percent' && val > 100) val = 100;
-  
+  if (val < 0) return 0;
+
+  if (currentUnit === "percent" && val > 100) {
+    return lastValidValue;
+  }
+
   return val;
 }
 
+/**
+ * Sync UI state:
+ * - update input value
+ * - enable / disable buttons
+ * - show / hide tooltip based on unit
+ */
 function updateInputAndButtons() {
-  const valueEl = document.getElementById('value');
+  const valueEl = document.getElementById("value");
   const decreaseBtn = document.querySelector('[data-action="decrease"]');
   const increaseBtn = document.querySelector('[data-action="increase"]');
-  const increaseTooltip = increaseBtn.closest('.stepper-btn-wrapper').querySelector('.tooltip');
+  const tooltip = increaseBtn
+    .closest(".stepper-btn-wrapper")
+    .querySelector(".tooltip");
 
-  // Update input value
-  valueEl.value = value.toFixed(1);
+  valueEl.value = formatValue(value);
 
-  // Disable/enable buttons based on current value
-  if (currentUnit === 'percent') {
-    decreaseBtn.disabled = value === 0;
+  decreaseBtn.disabled = value === 0;
+
+  if (currentUnit === "percent") {
     increaseBtn.disabled = value === 100;
-    if (increaseTooltip) increaseTooltip.style.display = '';
+    if (tooltip) tooltip.style.display = "";
   } else {
-    // For px, only disable decrease at 0
-    decreaseBtn.disabled = value === 0;
     increaseBtn.disabled = false;
-    if (increaseTooltip) increaseTooltip.style.display = 'none';
+    if (tooltip) tooltip.style.display = "none";
   }
+}
+
+/**
+ * Format number for display:
+ * - integer → no decimal
+ * - decimal → one decimal place
+ */
+function formatValue(val) {
+  return Number.isInteger(val) ? String(val) : val.toFixed(1);
 }
 
 export function getValue() {
