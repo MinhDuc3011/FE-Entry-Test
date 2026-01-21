@@ -1,7 +1,7 @@
 # FE-Entry-Test
 # Unit Value Stepper
 
-A simple JavaScript component for numeric input with unit switching (`%` / `px`), validation, and step controls.
+A simple React component for numeric input with unit switching (`%` / `px`), validation, and step controls.
 
 ## Getting Started
 
@@ -10,10 +10,9 @@ npm install
 
 Run in development mode:
 npm run dev
-npx serve
 
 Run tests:
-npm test
+npm test/npm run test
 
 ## Tech Stack
-Vanilla JavaScript, Vite, Vitest
+React, TypeScript, Vite, Tailwind CSS, Vitest
